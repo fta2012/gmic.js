@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>G'MIC demo</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <style>
+      canvas {
+        box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+      }
+    </style>
+  </head>
+  <body style="background-color:#bbb">
+    <script>
+      // See https://kripken.github.io/emscripten-site/docs/api_reference/module.html
+      GMIC = {
+        printErr: (msg) => {
+          // Redirect stderr
+          console.warn(msg);
+          const line = document.createElement("pre");
+          line.textContent = msg;
+          line.style = "background-color: #fffbe6";
+          document.getElementById('output').appendChild(line);
+        },
+        print: (msg) => {
+          // Redirect stdout
+          console.log(msg);
+          return
+          const line = document.createElement("pre");
+          line.textContent = msg;
+          document.getElementById('output').appendChild(line);
+        }
+      };
+    </script>
+    <script src="build/gmic.js"></script>
+    <script src="demo.js"></script>
+
+    <div class="container">
+      <h1>gmic.js</h1>
+      <p>Demo of <a href="http://gmic.eu/libgmic.shtml">G'MIC</a> compiled to javascript using emscripten.</p>
+      <p>Click and drag to create a mask on top of the image, then run to do an inpaint/content-aware fill (should take ~10 seconds).<p>
+      <p>Afterwards you can also try <a href="http://gmic.eu/reference.shtml#subsection15">other gmic examples</a> by opening up console and doing something like: <pre>display(GMIC.gmic('-fire_edges[0]', [window.originalImageData], ['original']))</pre> and it should output at the bottom.</p>
+
+      <div style="text-align: center">
+        <div style="position: relative; user-select: none; user-drag: none; white-space: nowrap; display: inline-block">
+          <img id="inputImage"></img>
+          <canvas id="inputMask" style="position: absolute; top: 0; left: 0"></canvas>
+        </div>
+      </div>
+
+      <div style="margin:10px 0">
+        [0] Original image
+        <label class="btn btn-default btn-file">
+            Choose another image <input type="file" id="inputFile" style="display:none;">
+        </label>
+      </div>
+
+      <div style="margin:10px 0">
+        [1] Mask image
+        <button class="btn btn-default" id="inputMaskClear">Clear mask</button>
+      </div>
+
+      <button class="btn btn-primary" id="inpaintButton">Run</button>
+
+      <div id="output"></div>
+
+    </div>
+  </body>
+</html>

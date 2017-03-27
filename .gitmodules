@@ -1,0 +1,3 @@
+[submodule "external/gmic"]
+	path = external/gmic
+	url = https://github.com/dtschump/gmic.git
